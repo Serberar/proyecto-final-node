@@ -1,5 +1,5 @@
 const { verifySign } = require("../jwt");
-const User = require("../models/models.user");
+const user = require("../models/models.user");
 
 
 const isAuth = async (req, res, next) =>{
@@ -21,7 +21,7 @@ const isAuth = async (req, res, next) =>{
         }
         
         console.log(tokenVerified);
-        const userLogged = await User.findById(tokenVerified.id); 
+        const userLogged = await user.findById(tokenVerified.id); 
         req.user = userLogged; 
 
         next();
@@ -49,7 +49,7 @@ const isAdmin = async (req, res, next) =>{
         }
         
         console.log(tokenVerified);
-        const userLogged = await User.findById(tokenVerified.id); 
+        const userLogged = await user.findById(tokenVerified.id); 
 
         if(userLogged.role !== 'Admin'){
             return res.status(401).json({message: 'Necesitas ser administrador'});

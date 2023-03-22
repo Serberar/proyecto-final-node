@@ -5,12 +5,7 @@ const Schema = mongoose.Schema;
 //creamos el Schema se nuestra entidad movies
 const usersSchema = new Schema(
 {
-    
-    nombre: {type: String, required: true},
-    apellidos: {type: String, required: true},
-    edad: {type: Number, required: true},
-    sexo: {type: String, required: true},
-    telefono: {type: Number, required: true},
+
     email: {type: String, required: true},
     password:{type:String, require:true},
     role: {type: String, default:'user', enum:['admin', 'user']}

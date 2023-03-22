@@ -7,7 +7,7 @@ const {generateSign}= require("../jwt")
 
 const login = async (req, res) => {
     try {
-        const userInfo = await User.findOne({ email: req.body.email})
+        const userInfo = await user.findOne({ email: req.body.email})
         if(!userInfo) {
             return res.status(404).json({message: 'invalid email address'})
         }
@@ -24,26 +24,26 @@ const login = async (req, res) => {
 const register = async (req, res)=>{
   console.log(req.body);
     try{
-        const newUser= new User({
+        const newuser= new user({
             email: req.body.email,
             password: req.body.password
           });
         
-          if(!validateEmail(newUser.email)){
+          if(!validateEmail(newuser.email)){
            return res.status(400).send({message: "Invalid email"});
             
           }
-          if(!validatePassword(newUser.password)){
+          if(!validatePassword(newuser.password)){
             return res.status(400).send({message: "Invalid password"});
           }
-        if(await usedEmail(newUser.email) > 0){
+        if(await usedEmail(newuser.email) > 0){
            return res.status(400).send({message: "Email is already in use"});
         }
 
-        newUser.password= bcrypt.hashSync(newUser.password,10);
-        const createdUser= await newUser.save();
+        newuser.password= bcrypt.hashSync(newuser.password,10);
+        const createduser= await newuser.save();
       
-        return res.status(201).json(createdUser);
+        return res.status(201).json(createduser);
     } catch (error) {
         return res.status(500).json(error);
       }

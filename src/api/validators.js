@@ -1,4 +1,4 @@
-const User =require ("../api/models/models.user");
+const user =require ("../api/models/models.user");
 
 const validateEmail = (email) => {
     const regex=  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -10,7 +10,7 @@ const validatePassword = (password) => {
     return regex.test(String(password));
 }
 const usedEmail = async (email) => {
-    const users = await User.find({email: email}) 
+    const users = await user.find({email: email}) 
     return users.length;
 }
 
