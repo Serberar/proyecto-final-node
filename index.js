@@ -8,7 +8,8 @@ const dotenv = require('dotenv')
 const {connect} = require('./src/utils/database');
 
 //importo el router
-const routerdata =require('./src/api/routes/data.routes')
+const routerdata =require('./src/api/routes/data.routes');
+const routeruser =require('./src/api/routes/user.routes')
 
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(express.urlencoded({extended: false}));
 
 //pongo las rutas
 app.use('/alimentos', routerdata);
+app.use('/usuarios', routeruser);
 
 
 //le decimos donde escucha y asignamos una funcion 
