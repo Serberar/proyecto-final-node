@@ -10,8 +10,10 @@ const usersSchema = new Schema(
     apellidos: {type: String, required: true},
     edad: {type: Number, required: true},
     sexo: {type: String, required: true},
-    email: {type: Number, required: true},
-    telefono: {type: Number, required: true}
+    telefono: {type: Number, required: true},
+    email: {type: String, required: true},
+    password:{type:String, require:true},
+    role: {type: String, default:'user', enum:['admin', 'user']}
 
 
 }, {

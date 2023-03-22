@@ -1,78 +1,60 @@
 //importamos el cliente 
 const user = require("../models/models.user");
+const bcrypt =require ("bcrypt");
+const {validateEmail,validatePassword,usedEmail }=require ("../validators");
+const {generateSign}= require("../jwt")
 
-//generamos las funciones
-//genero las funciones del get
-//me filta todas las entradas
-const getuser = async (req, res) => {
-    try{
-        //recojo los users con una peticion a mongo
-        const allusers = await user.find();
-        //devuelvo los users en estado jsn con status 200
-        return res.status(200).json(allusers);
-    }catch(error){
-        return res.status(500).json(error);
-    }
-}
 
-//filtro por titulo
-const getuserBytitle = async (req, res) => {
-    try{
-        //recojo los users con una peticion a mongo
-        const {title}= req.params;
-        //filtro por titulo
-        const titleusers = await user.find({title}); 
-        //devuelvo los users en estado jsn con status 200
-        return res.status(200).json(titleusers);
-    }catch(error){
-        return res.status(500).json(error);
-    }
-}
-
-//genero la funcion del post
-const postuser = async (req, res) => {
-   try{
-        console.log(req.body); 
-        const {nombre, cantidad, calorias, proteinas, carbohidratos, grasas} =req.body;
-        //creamos un nuevo cliente con los datoe enviados
-        const newuser = new user ({nombre, cantidad, calorias, proteinas, carbohidratos, grasas})
-        //guardamos los users en la base de users y nos devuelde el nuevo elemento
-        const createduser = await newuser.save();
-        return res.status(201).json(createduser);
-   } catch (error) {
-    return res.status(500).json(error);
-   }
-}
-
-// genero la funcion put
-const putuser = async (req, res) => {
+const login = async (req, res) => {
     try {
-      const { id } = req.params;
-      const updateduser = new user(req.body);
-      updateduser._id = id;
-  
-      const updateuser = await user.findByIdAndUpdate(id, updateduser, { new: true }); //Buscamos por id y actualizamos el elemento
-      if (!updateuser) {     //Controlamos que el elemento existiera y si no enviamos error 404
-        return res.status(404).json({ "message": "user not found" });
-      }
-      return res.status(200).json(updateuser);
-    } catch (error) {
-      return res.status(500).json(error);
-    }
-  };
-
-//genero la funcion delete
-const deleteuser = async (req, res) => {
-    try{
-        const {id}=req.params;
-        const deleteuser = await user.findByIdAndDelete(id); //Buscamos por id y actualizamos el elemento
-        if(!deleteuser){     //Controlamos que el elemento existiera y si no enviamos error 404
-            return res.status(404).json({ "message": "user not found"});
+        const userInfo = await User.findOne({ email: req.body.email})
+        if(!userInfo) {
+            return res.status(404).json({message: 'invalid email address'})
         }
-        return res.status(200).json(deleteuser);
+        if(!bcrypt.compareSync(req.body.password, userInfo.password)){        
+            return res.status(404).json({message: 'invalid password'});
+        }
+        const token = generateSign(userInfo._id, userInfo.email)
+        return res.status(200).json({userInfo, token});
     } catch (error) {
-     return res.status(500).json(error);
+        return res.status(500).json(error)
     }
 }
 
-module.exports ={getuser, getuserBytitle, postuser, putuser, deleteuser};
+const register = async (req, res)=>{
+  console.log(req.body);
+    try{
+        const newUser= new User({
+            email: req.body.email,
+            password: req.body.password
+          });
+        
+          if(!validateEmail(newUser.email)){
+           return res.status(400).send({message: "Invalid email"});
+            
+          }
+          if(!validatePassword(newUser.password)){
+            return res.status(400).send({message: "Invalid password"});
+          }
+        if(await usedEmail(newUser.email) > 0){
+           return res.status(400).send({message: "Email is already in use"});
+        }
+
+        newUser.password= bcrypt.hashSync(newUser.password,10);
+        const createdUser= await newUser.save();
+      
+        return res.status(201).json(createdUser);
+    } catch (error) {
+        return res.status(500).json(error);
+      }
+};
+
+const checkSession = async (req, res)=>{
+    try{
+        res.status(200).json(req.user)
+    } catch (error) {
+        return res.status(500).json(error);
+      }
+}
+
+module.exports={login,register,checkSession}

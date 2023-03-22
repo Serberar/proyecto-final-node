@@ -1,21 +1,15 @@
-//requerimos express
-const express = require('express');
-
-//generamos el enrutador
+const express= require("express");
 const router = express.Router();
+const{login,checkSession,register}= require("../controllers/user.controller");
+const {isAuth,isAdmin} = require("../middlewares/auth");
 
-//importo las funciones
-const {getuser, getuserBytitle, postuser, putuser, deleteuser} = require('../controllers/user.controller')
 
-//generamos las rutas
-//rutas get
-router.get('/', getuser);
-router.get('/nombre/:nombre', getuserBytitle);
-//ruta post
-router.post('/', postuser);
-//ruta put
-router.put('/:id', putuser);
-//ruta delete
-router.delete('/:id', deleteuser);
+router.post("/checkSession",[isAuth],checkSession);
+router.post("/login", login);
+router.post("/register", register);
 
-module.exports = router;
+// router.post("/checkSession",[isAdmin],checkSession);
+// router.post("/login", login);
+// router.post("/register", register);
+
+module.exports= router;
