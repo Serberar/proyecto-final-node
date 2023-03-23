@@ -1,5 +1,5 @@
 const express = require("express");
-
+const upload = require('../middlewares/upload.file');
 const router = express.Router();
 
 const {
@@ -10,7 +10,7 @@ const {
   getInfoByTelefono,
   postInfo,
   putInfo,
-  deleteInfo
+  deleteInfo,
 } = require("../controllers/info.controller");
 
 router.get("/", getInfo);
@@ -23,9 +23,11 @@ router.get("/apellidos/:apellidos", getInfoByApellidos);
 
 router.get("/telefono/:telefono", getInfoByTelefono);
 
-router.post("/", postInfo);
+router.post("/", upload.single('image'),postInfo);
 
-router.put("/:id", putInfo);
+router.put("/:id", upload.single('image'), putInfo);
 
 router.delete("/:id", deleteInfo);
+
+
 module.exports = router;
