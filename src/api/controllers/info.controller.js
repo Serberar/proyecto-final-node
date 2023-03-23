@@ -3,7 +3,7 @@ const Info = require("../models/models.info");
 //Gets
 const getInfo = async (req,res) => {
     try {
-        // const allInfo = await Info.find(); 
+        const allInfo = await Info.find(); 
         return res.status(200).json(allInfo);
     } catch (error) {
         return res.status(500).json(error);
@@ -13,8 +13,10 @@ const getInfo = async (req,res) => {
 const getInfoById = async (req,res) => {
     try {
         const {id} = req.params;
-        const infoSearchById = await Info.findById(id).populate('data');
-        if(!Info){
+        console.log(id);
+        const infoSearchById = await Info.findById(id).populate("data");
+        console.log(infoSearchById);
+        if(!infoSearchById){
             return res.status(404).json({'message':'User not found'})
         }
         return res.status(200).json(infoSearchById);
@@ -60,7 +62,7 @@ const postInfo = async (req,res) => {
 
         const newInfo = new Info(req.body);
 
-        const createInfo = await Info.save();
+        const createInfo = await newInfo.save();
         return res.status(201).json(createInfo); 
         
     } catch (error) {
@@ -99,4 +101,4 @@ const deleteInfo = async (req,res) => {
     }
 }
 
-// module.exports = {getInfo,getInfoById,getInfoByNombre,getInfoByApellidos,getInfoByTelefono,postInfo,putInfo,deleteInfo};
+module.exports = {getInfo, getInfoById,getInfoByNombre,getInfoByApellidos,getInfoByTelefono, postInfo};

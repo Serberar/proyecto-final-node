@@ -21,7 +21,7 @@ const datosSchema = new Schema(
 
 )
 //insertamos en la const data el modelo
-const data = mongoose.model('data', datosSchema);
+const Data = mongoose.model('data', datosSchema);
 
 //exportamos el modelo
-module.exports = data;
+module.exports = Data;

@@ -1,5 +1,5 @@
 //importamos el cliente 
-const data = require("../models/models.datos");
+const Data = require("../models/models.datos");
 
 //generamos las funciones
 //genero las funciones del get
@@ -7,7 +7,7 @@ const data = require("../models/models.datos");
 const getdata = async (req, res) => {
     try{
         //recojo los datos con una peticion a mongo
-        const alldatos = await data.find();
+        const alldatos = await Data.find();
         //devuelvo los datos en estado jsn con status 200
         return res.status(200).json(alldatos);
     }catch(error){
@@ -21,7 +21,7 @@ const getdataBytitle = async (req, res) => {
         //recojo los datos con una peticion a mongo
         const {title}= req.params;
         //filtro por titulo
-        const titledatos = await data.find({title}); 
+        const titledatos = await Data.find({title}); 
         //devuelvo los datos en estado jsn con status 200
         return res.status(200).json(titledatos);
     }catch(error){
@@ -35,7 +35,7 @@ const postdata = async (req, res) => {
         console.log(req.body); 
         const {nombre, cantidad, calorias, proteinas, carbohidratos, grasas} =req.body;
         //creamos un nuevo cliente con los datoe enviados
-        const newdata = new data ({nombre, cantidad, calorias, proteinas, carbohidratos, grasas})
+        const newdata = new Data ({nombre, cantidad, calorias, proteinas, carbohidratos, grasas})
         //guardamos los datos en la base de datos y nos devuelde el nuevo elemento
         const createddata = await newdata.save();
         return res.status(201).json(createddata);
@@ -48,10 +48,10 @@ const postdata = async (req, res) => {
 const putdata = async (req, res) => {
     try {
       const { id } = req.params;
-      const updateddata = new data(req.body);
+      const updateddata = new Data(req.body);
       updateddata._id = id;
   
-      const updatedata = await data.findByIdAndUpdate(id, updateddata, { new: true }); //Buscamos por id y actualizamos el elemento
+      const updatedata = await Data.findByIdAndUpdate(id, updateddata, { new: true }); //Buscamos por id y actualizamos el elemento
       if (!updatedata) {     //Controlamos que el elemento existiera y si no enviamos error 404
         return res.status(404).json({ "message": "data not found" });
       }
@@ -65,7 +65,7 @@ const putdata = async (req, res) => {
 const deletedata = async (req, res) => {
     try{
         const {id}=req.params;
-        const deletedata = await data.findByIdAndDelete(id); //Buscamos por id y actualizamos el elemento
+        const deletedata = await Data.findByIdAndDelete(id); //Buscamos por id y actualizamos el elemento
         if(!deletedata){     //Controlamos que el elemento existiera y si no enviamos error 404
             return res.status(404).json({ "message": "data not found"});
         }
