@@ -125,22 +125,6 @@ const deleteInfo = async (req, res) => {
   }
 };
 
-const deleteImg = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const deleteImg = await Img.findByIdAndDelete(id);
-      if (!deleteImg) {
-        return res.status(404).json({ message: "Img not found" });
-      }
-      if (deleteImg.image) {
-        deleteFile(deleteImg.image);
-      }
-      return res.status(200).json(deleteImg);
-    } catch (error) {
-      return res.status(500).json(error);
-    }
-  };
-
 module.exports = {
   getInfo,
   getInfoById,
@@ -149,5 +133,5 @@ module.exports = {
   getInfoByTelefono,
   postInfo,
   putInfo,
-  deleteInfo
+  deleteInfo,
 };
