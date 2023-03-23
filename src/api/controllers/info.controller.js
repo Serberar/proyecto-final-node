@@ -48,7 +48,7 @@ const getInfoByApellidos = async (req,res) => {
 const getInfoByTelefono = async (req,res) => {
     try {
         const {telefono} = req.params;
-        const infoByTelefono = await Info.find({telefono:telefono});
+        const infoByTelefono = await Info.find({telefono: telefono});
         return res.status(200).json(infoByTelefono);
     } catch (error) {
         return res.status(500).json(error);
@@ -101,4 +101,4 @@ const deleteInfo = async (req,res) => {
     }
 }
 
-module.exports = {getInfo, getInfoById,getInfoByNombre,getInfoByApellidos,getInfoByTelefono, postInfo};
+module.exports = {getInfo, getInfoById,getInfoByNombre,getInfoByApellidos,getInfoByTelefono, postInfo, putInfo,deleteInfo};

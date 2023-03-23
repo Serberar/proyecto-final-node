@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const infoSchema = new Schema({
      nombre: {type: String, required: true},
      apellidos: {type: String, required: true},
-     telefono: {type: Number, required: true},
+     telefono: {type: String, required: true},
      observaciones: {type: String, required: false},
-     dieta: [{type: Schema.Types.ObjectId, ref: 'data'}]
+     data: [{type: Schema.Types.ObjectId, ref: 'data'}]
 },{
     timestamps: true,
 });
