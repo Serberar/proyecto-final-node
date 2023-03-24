@@ -9,10 +9,10 @@ const validatePassword = (password) => {
     const regex=  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
     return regex.test(String(password));
 }
+
 const usedEmail = async (email) => {
     const users = await user.find({email: email}) 
     return users.length;
 }
-
 
     module.exports = {validateEmail,validatePassword,usedEmail};

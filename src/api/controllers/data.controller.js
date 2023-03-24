@@ -4,16 +4,56 @@ const Data = require("../models/models.datos");
 //generamos las funciones
 //genero las funciones del get
 //me filta todas las entradas
+
 const getdata = async (req, res) => {
-    try{
-        //recojo los datos con una peticion a mongo
-        const alldatos = await Data.find();
-        //devuelvo los datos en estado jsn con status 200
-        return res.status(200).json(alldatos);
-    }catch(error){
-        return res.status(500).json(error);
+    try {
+      let {page, limit} = req.query;
+      const numdatos = await Data.countDocuments();
+      limit = limit ? parseInt(limit) : 10;
+      if(page && !isNaN(parseInt(page))){
+        page = parseInt(page);
+        console.log(page)
+        let numPages = numdatos % limit > 0 ? numdatos / limit + 1 : numdatos / limit;
+        
+        if(page> numPages) page = numPages;
+        
+        if(page < 1) page = 1;      
+  
+        const skip = (page - 1) * limit; 
+  
+        const datos = await Data.find().skip(skip).limit(limit)
+        return res.status(200).json(
+          {
+            info: {
+              numTotal: numdatos,
+              page: page,
+              limit: limit,
+              nextPage: numPages >= page + 1 ? `/alimentos?page=${page + 1}&limit=${limit}` : null,
+              prevPage: page != 1 ? `/alimentos?page=${page - 1}&limit=${limit}` : null
+            },
+            results:datos
+          }
+        )
+  
+      }else{
+        const datos = await Data.find().limit(limit);
+        return res.status(200).json({
+          info: {
+            numTotal: numdatos,
+            page: 1,
+            limit: limit,
+            nextPage: numdatos > limit ? `/alimentos?page=2&limit=${limit}` : null,
+            prevPage: null
+          },
+          results: datos
+        });
+      }
+  
+    } catch (error) {
+      return res.status(500).json(error);
     }
-}
+  };
+
 
 //filtro por titulo
 const getdataBytitle = async (req, res) => {
