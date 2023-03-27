@@ -1,15 +1,14 @@
 const express= require("express");
 const router = express.Router();
-const{login,checkSession,register}= require("../controllers/user.controller");
+const{login, checkSession, register, getuser, deleteuser}= require("../controllers/user.controller");
 const {isAuth,isAdmin} = require("../middlewares/auth");
 
 
+router.get("/", getuser);
 router.post("/checkSession",[isAuth],checkSession);
 router.post("/login", login);
 router.post("/register", register);
+router.post("/:id", deleteuser);
 
-// router.post("/checkSession",[isAdmin],checkSession);
-// router.post("/login", login);
-// router.post("/register", register);
 
 module.exports= router;

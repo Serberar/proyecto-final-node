@@ -4,6 +4,16 @@ const bcrypt =require ("bcrypt");
 const {validateEmail,validatePassword,usedEmail }=require ("../validators");
 const {generateSign}= require("../jwt")
 
+const getuser = async (req, res) => {
+    try{
+        //recojo los datos con una peticion a mongo
+        const alluser = await user.find();
+        //devuelvo los datos en estado jsn con status 200
+        return res.status(200).json(alluser);
+    }catch(error){
+        return res.status(500).json(error);
+    }
+}
 
 const login = async (req, res) => {
     try {
@@ -57,4 +67,17 @@ const checkSession = async (req, res)=>{
       }
 }
 
-module.exports={login,register,checkSession}
+const deleteuser = async (req, res) => {
+    try{
+        const {id}=req.params;
+        const deletemovie = await user.findByIdAndDelete(id); //Buscamos por id y actualizamos el elemento
+        if(!deleteuser){     //Controlamos que el elemento existiera y si no enviamos error 404
+            return res.status(404).json({ "message": "user not found"});
+        }
+        return res.status(200).json(deleteuser);
+    } catch (error) {
+     return res.status(500).json(error);
+    }
+}
+
+module.exports={login,register,checkSession,getuser,deleteuser}
